@@ -1,9 +1,9 @@
 {
-  "name": "segment-cordova-plugin",
+  "name": "segment-cordova-plugin-v1",
   "version": "4.0.0",
   "description": "Segment Cordova Plugin",
   "cordova": {
-    "id": "segment-cordova-plugin",
+    "id": "segment-cordova-plugin-v1",
     "platforms": [
       "android",
       "ios"
