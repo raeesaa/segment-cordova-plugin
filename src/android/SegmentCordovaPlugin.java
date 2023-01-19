@@ -159,7 +159,7 @@ public class SegmentCordovaPlugin extends CordovaPlugin {
                                 // Continue with the new payload.
                                 chain.proceed(newPayload);
                             }
-                        })
+                        });
                     }
                 }
 
