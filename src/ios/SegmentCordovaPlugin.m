@@ -66,6 +66,10 @@
                 if ([configOptions objectForKey:@"enableBrazeIntegration"] != nil && [[configOptions objectForKey:@"enableBrazeIntegration"] boolValue] == true) {
                     [configuration use:[SEGAppboyIntegrationFactory instance]];
                 }
+
+                if ([configOptions objectForKey:@"anonymizeIP"] != nil && [[configOptions objectForKey:@"anonymizeIP"] boolValue] == true) {
+                   // TODO: Implement middleware 
+                }
             }
         }
 

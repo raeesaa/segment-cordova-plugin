@@ -4,6 +4,8 @@ import com.segment.analytics.Analytics;
 import com.segment.analytics.Options;
 import com.segment.analytics.Properties;
 import com.segment.analytics.Traits;
+import com.segment.analytics.Middleware;
+import com.segment.analytics.integrations.BasePayload;
 
 import android.util.Log;
 
@@ -23,6 +25,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.LinkedHashMap;
 
 import com.segment.analytics.android.integrations.appboy.AppboyIntegration;
 
@@ -136,6 +139,28 @@ public class SegmentCordovaPlugin extends CordovaPlugin {
                         builder.use(AppboyIntegration.FACTORY);
                     }
                     // middleware, connectionFactory, optOut are not currently supported.
+                    if(obj.has("anonymizeIP") && obj.optBoolean("anonymizeIP") == true) {
+                        builder.useSourceMiddleware(new Middleware() {
+                            @Override
+                            public void intercept(Chain chain) {
+                                // Get the payload.
+                                BasePayload payload = chain.payload();
+
+                                // Update IP in the context object.
+                                Map<String, Object> context = new LinkedHashMap<>(payload.context());
+                                // Anonymize IP
+                                context.put("ip", "0.0.0.0");
+
+                                // Build our new payload.
+                                BasePayload newPayload = payload.toBuilder()
+                                    .context(context)
+                                    .build();
+
+                                // Continue with the new payload.
+                                chain.proceed(newPayload);
+                            }
+                        })
+                    }
                 }
 
                 Analytics analytics = builder.build();
