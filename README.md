@@ -99,6 +99,9 @@ Record in-app purchases from the App Store. (Default: false)
 #### trackPushNotifications (iOS)
 Record push notifications.  (Default: false)
 
+### anonymizeIP (Android and iOS)
+Anonymize IP address. (Default: false)
+
 **Example Usage:**
 ```javascript
 window.Segment.startWithConfiguration(IOS_OR_ANDROID_KEY, {
