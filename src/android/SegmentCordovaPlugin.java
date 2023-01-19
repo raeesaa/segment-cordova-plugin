@@ -140,26 +140,26 @@ public class SegmentCordovaPlugin extends CordovaPlugin {
                     }
                     // middleware, connectionFactory, optOut are not currently supported.
                     if(obj.has("anonymizeIP") && obj.optBoolean("anonymizeIP") == true) {
-                        builder.useSourceMiddleware(new Middleware() {
-                            @Override
-                            public void intercept(Chain chain) {
-                                // Get the payload.
-                                BasePayload payload = chain.payload();
+                        // builder.useSourceMiddleware(new Middleware() {
+                        //     @Override
+                        //     public void intercept(Chain chain) {
+                        //         // Get the payload.
+                        //         BasePayload payload = chain.payload();
 
-                                // Update IP in the context object.
-                                Map<String, Object> context = new LinkedHashMap<>(payload.context());
-                                // Anonymize IP
-                                context.put("ip", "0.0.0.0");
+                        //         // Update IP in the context object.
+                        //         Map<String, Object> context = new LinkedHashMap<>(payload.context());
+                        //         // Anonymize IP
+                        //         context.put("ip", "0.0.0.0");
 
-                                // Build our new payload.
-                                BasePayload newPayload = payload.toBuilder()
-                                    .context(context)
-                                    .build();
+                        //         // Build our new payload.
+                        //         BasePayload newPayload = payload.toBuilder()
+                        //             .context(context)
+                        //             .build();
 
-                                // Continue with the new payload.
-                                chain.proceed(newPayload);
-                            }
-                        });
+                        //         // Continue with the new payload.
+                        //         chain.proceed(newPayload);
+                        //     }
+                        // });
                     }
                 }
 
