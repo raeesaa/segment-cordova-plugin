@@ -4,6 +4,8 @@ import com.segment.analytics.Analytics;
 import com.segment.analytics.Options;
 import com.segment.analytics.Properties;
 import com.segment.analytics.Traits;
+import com.segment.analytics.Middleware;
+import com.segment.analytics.integrations.BasePayload;
 
 import android.util.Log;
 
@@ -23,6 +25,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.LinkedHashMap;
 
 import com.segment.analytics.android.integrations.appboy.AppboyIntegration;
 
@@ -143,8 +146,7 @@ public class SegmentCordovaPlugin extends CordovaPlugin {
                                 // Get the payload.
                                 BasePayload payload = chain.payload();
 
-                                // Set the device year class on the context object.
-                                int year = YearClass.get(getApplicationContext());
+                                // Update IP in the context object.
                                 Map<String, Object> context = new LinkedHashMap<>(payload.context());
                                 // Anonymize IP
                                 context.put("ip", "0.0.0.0");
