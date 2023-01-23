@@ -89,21 +89,21 @@
                                         context: newContext
                                         integrations: ((SEGTrackPayload*)ctx.payload).integrations
                                     ];
-                                    } else if ([ctx.payload isKindOfClass:[SEGScreenPayload class]]) {
+                                } else if ([ctx.payload isKindOfClass:[SEGScreenPayload class]]) {
                                     ctx.payload = [[SEGScreenPayload alloc]
                                         initWithName: ((SEGScreenPayload*)ctx.payload).name
                                         properties: ((SEGScreenPayload*)ctx.payload).properties
                                         context: newContext
                                         integrations: ((SEGScreenPayload*)ctx.payload).integrations
                                     ];
-                                    } else if ([ctx.payload isKindOfClass:[SEGGroupPayload class]]) {
+                                } else if ([ctx.payload isKindOfClass:[SEGGroupPayload class]]) {
                                     ctx.payload = [[SEGGroupPayload alloc]
                                         initWithGroupId: ((SEGGroupPayload*)ctx.payload).groupId
                                         traits: ((SEGGroupPayload*)ctx.payload).traits
                                         context: newContext
                                         integrations: ((SEGGroupPayload*)ctx.payload).integrations
                                     ];
-                                    } else if ([ctx.payload isKindOfClass:[SEGIdentifyPayload class]]) {
+                                } else if ([ctx.payload isKindOfClass:[SEGIdentifyPayload class]]) {
                                     ctx.payload = [[SEGIdentifyPayload alloc]
                                         initWithUserId: ((SEGIdentifyPayload*)ctx.payload).userId
                                         anonymousId: ((SEGIdentifyPayload*)ctx.payload).anonymousId
@@ -111,7 +111,7 @@
                                         context: newContext
                                         integrations: ((SEGIdentifyPayload*)ctx.payload).integrations
                                     ];
-                                    }
+                                }
                             }
                             @catch (NSException *exception) {
                                 NSLog(@"Could not update segment context: %@", [exception reason]);
