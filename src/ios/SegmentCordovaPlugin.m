@@ -68,7 +68,26 @@
                 }
 
                 if ([configOptions objectForKey:@"anonymizeIP"] != nil && [[configOptions objectForKey:@"anonymizeIP"] boolValue] == true) {
-                   // TODO: Implement middleware 
+                    SEGBlockMiddleware *customizeAllTrackCalls = [[SEGBlockMiddleware alloc] initWithBlock:^(SEGContext * _Nonnull context, SEGMiddlewareNext  _Nonnull next) {
+                        // TODO: Handle screen and identify events
+                        if ([context.payload isKindOfClass:[SEGTrackPayload class]]) {
+                            SEGTrackPayload *track = (SEGTrackPayload *)context.payload;
+                            next([context modify:^(id<SEGMutableContext> _Nonnull ctx) {
+                                NSMutableDictionary *newContext = (track.context != nil) ? [track.context mutableCopy] : [@{} mutableCopy];
+                                newContext[@"ip"] = @"0.0.0.0";
+                                ctx.payload = [[SEGTrackPayload alloc] initWithEvent:track.event
+                                                                          properties:track.properties
+                                                                             context:newContext
+                                                                        integrations:track.integrations];
+                            }]);
+                        } else {
+                            next(context);
+                        }
+                    }];
+                    
+                    configuration.middlewares = @[
+                        customizeAllTrackCalls
+                    ];
                 }
             }
         }
