@@ -69,20 +69,54 @@
 
                 if ([configOptions objectForKey:@"anonymizeIP"] != nil && [[configOptions objectForKey:@"anonymizeIP"] boolValue] == true) {
                     SEGBlockMiddleware *customizeAllTrackCalls = [[SEGBlockMiddleware alloc] initWithBlock:^(SEGContext * _Nonnull context, SEGMiddlewareNext  _Nonnull next) {
-                        // TODO: Handle screen and identify events
-                        if ([context.payload isKindOfClass:[SEGTrackPayload class]]) {
-                            SEGTrackPayload *track = (SEGTrackPayload *)context.payload;
-                            next([context modify:^(id<SEGMutableContext> _Nonnull ctx) {
-                                NSMutableDictionary *newContext = (track.context != nil) ? [track.context mutableCopy] : [@{} mutableCopy];
-                                newContext[@"ip"] = @"0.0.0.0";
-                                ctx.payload = [[SEGTrackPayload alloc] initWithEvent:track.event
-                                                                          properties:track.properties
-                                                                             context:newContext
-                                                                        integrations:track.integrations];
-                            }]);
-                        } else {
+
+                        // Avoid overriding the context if there is none to override
+                        if (![context.payload isKindOfClass:[SEGTrackPayload class]]
+                            && ![context.payload isKindOfClass:[SEGScreenPayload class]]
+                            && ![context.payload isKindOfClass:[SEGGroupPayload class]]
+                            && ![context.payload isKindOfClass:[SEGIdentifyPayload class]]) {
                             next(context);
+                            return;
                         }
+                        next([context modify:^(id<SEGMutableContext> _Nonnull ctx) {
+                            @try {
+                                NSMutableDictionary *newContext = (context.payload.context != nil) ? [context.payload.context mutableCopy] : [@{} mutableCopy];
+                                newContext[@"ip"] = @"0.0.0.0";
+                                if ([ctx.payload isKindOfClass:[SEGTrackPayload class]]) {
+                                    ctx.payload = [[SEGTrackPayload alloc]
+                                        initWithEvent: ((SEGTrackPayload*)ctx.payload).event
+                                        properties: ((SEGTrackPayload*)ctx.payload).properties
+                                        context: newContext
+                                        integrations: ((SEGTrackPayload*)ctx.payload).integrations
+                                    ];
+                                    } else if ([ctx.payload isKindOfClass:[SEGScreenPayload class]]) {
+                                    ctx.payload = [[SEGScreenPayload alloc]
+                                        initWithName: ((SEGScreenPayload*)ctx.payload).name
+                                        properties: ((SEGScreenPayload*)ctx.payload).properties
+                                        context: newContext
+                                        integrations: ((SEGScreenPayload*)ctx.payload).integrations
+                                    ];
+                                    } else if ([ctx.payload isKindOfClass:[SEGGroupPayload class]]) {
+                                    ctx.payload = [[SEGGroupPayload alloc]
+                                        initWithGroupId: ((SEGGroupPayload*)ctx.payload).groupId
+                                        traits: ((SEGGroupPayload*)ctx.payload).traits
+                                        context: newContext
+                                        integrations: ((SEGGroupPayload*)ctx.payload).integrations
+                                    ];
+                                    } else if ([ctx.payload isKindOfClass:[SEGIdentifyPayload class]]) {
+                                    ctx.payload = [[SEGIdentifyPayload alloc]
+                                        initWithUserId: ((SEGIdentifyPayload*)ctx.payload).userId
+                                        anonymousId: ((SEGIdentifyPayload*)ctx.payload).anonymousId
+                                        traits: ((SEGIdentifyPayload*)ctx.payload).traits
+                                        context: newContext
+                                        integrations: ((SEGIdentifyPayload*)ctx.payload).integrations
+                                    ];
+                                    }
+                            }
+                            @catch (NSException *exception) {
+                                NSLog(@"Could not update segment context: %@", [exception reason]);
+                            }
+                        }]);
                     }];
                     
                     configuration.middlewares = @[
@@ -148,7 +182,7 @@
 
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
     } else {
-    	pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"The name of the event is required."];
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"The name of the event is required."];
     }
 
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
@@ -176,7 +210,7 @@
 
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
     } else {
-    	pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"The name of the screen is required."];
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"The name of the screen is required."];
     }
 
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
@@ -204,7 +238,7 @@
 
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
     } else {
-    	pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"The database ID for this group is required."];
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"The database ID for this group is required."];
     }
 
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
@@ -230,7 +264,7 @@
 
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
     } else {
-    	pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"The newId of the user to alias is required."];
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"The newId of the user to alias is required."];
     }
 
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
