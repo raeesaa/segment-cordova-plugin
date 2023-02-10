@@ -28,7 +28,7 @@
 
         <framework src="src/android/build.gradle" custom="true" type="gradleReference" />
 
-        <framework src="com.segment.analytics.android:analytics:4.3.1"/>
+        <framework src="com.segment.analytics.android:analytics:4.10.1"/>
         <framework src="com.appboy:appboy-segment-integration:4.0.0"/>
     </platform>
 
