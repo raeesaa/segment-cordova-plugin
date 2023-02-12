@@ -85,6 +85,7 @@ public class SegmentCordovaPlugin extends CordovaPlugin {
         try {
             if (null != id && id.length() > 0) {
                 builder = new Analytics.Builder(cordova.getActivity().getApplicationContext(), id);
+                builder.experimentalUseNewLifecycleMethods(false);
 
                 if (obj != null) {
                     if (obj.has("trackApplicationLifecycleEvents")) {
