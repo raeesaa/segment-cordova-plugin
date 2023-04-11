@@ -152,6 +152,15 @@ public class SegmentCordovaPlugin extends CordovaPlugin {
                                 // Anonymize IP
                                 context.put("ip", "0.0.0.0");
 
+                                // Disable advertising id if enableAdvertisingTracking is false
+                                if (obj.has("enableAdvertisingTracking") && obj.optBoolean("enableAdvertisingTracking") == false) {
+                                    AnalyticsContext.Device device = (AnalyticsContext.Device) context.get("device");
+                                    if (device != null) {
+                                        device.put("adTrackingEnabled", false);
+                                        device.put("advertisingId", "00000000-0000-0000-0000-000000000000");
+                                    }
+                                }
+
                                 // Build our new payload.
                                 BasePayload newPayload = payload.toBuilder()
                                     .context(context)
