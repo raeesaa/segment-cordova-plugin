@@ -87,7 +87,7 @@ Controls the level of logging (Default: INFO)
 #### shouldUseLocationServices (iOS)
 Use location services. (Default: false)
 
-#### enableAdvertisingTracking (iOS)
+#### enableAdvertisingTracking (iOS and Android)
 Record advertising info. (Default: true)
 
 #### shouldUseBluetooth (iOS)
