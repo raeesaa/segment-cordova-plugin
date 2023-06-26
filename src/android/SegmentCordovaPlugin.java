@@ -33,6 +33,7 @@ import com.segment.analytics.android.integrations.appboy.AppboyIntegration;
 public class SegmentCordovaPlugin extends CordovaPlugin {
 
     private static final String ACTION_WITH_CONFIGURATION = "startWithConfiguration";
+    private static final String ACTION_REGISTER_DEVICE_TOKEN = "registeredForRemoteNotifications";
     private static final String ACTION_IDENTIFY = "identify";
     private static final String ACTION_TRACK = "track";
     private static final String ACTION_SCREEN = "screen";
@@ -50,6 +51,9 @@ public class SegmentCordovaPlugin extends CordovaPlugin {
         if (length > 0) {
             if (ACTION_WITH_CONFIGURATION.equals(action) && length > 1) {
                 this.startWithConfiguration(args.getString(0), args.getJSONObject(1), callbackContext);
+                return true;
+            } else if (ACTION_REGISTER_DEVICE_TOKEN.equals(action)) {
+                this.registeredForRemoteNotifications(args.getString(0), callbackContext);
                 return true;
             } else if (ACTION_IDENTIFY.equals(action)) {
                 this.identify(args.getJSONObject(0), callbackContext);
@@ -181,6 +185,19 @@ public class SegmentCordovaPlugin extends CordovaPlugin {
                 callbackContext.success("Segment configuration started");
             } else {
                 callbackContext.error("Key is required.");
+            }
+        } catch (Exception ex) {
+            Log.getStackTraceString(ex);
+        }
+    }
+
+    private void registeredForRemoteNotifications(String token, CallbackContext callbackContext) {
+        try {
+            if (token != null) {
+                Analytics.with(cordova.getActivity().getApplicationContext()).getAnalyticsContext().putDeviceToken(token);
+                callbackContext.success("register token success");
+            } else {
+                callbackContext.success("register token failed - token is null");
             }
         } catch (Exception ex) {
             Log.getStackTraceString(ex);
