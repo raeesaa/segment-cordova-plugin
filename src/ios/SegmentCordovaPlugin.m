@@ -151,6 +151,7 @@
 }
 
 - (void) registeredForRemoteNotifications:(CDVInvokedUrlCommand*)command {
+    CDVPluginResult* pluginResult = nil;
     NSString* token = nil;
     NSData* deviceToken = nil;
 
@@ -164,7 +165,12 @@
 
     if (deviceToken != nil) {
         [SEGAnalytics.sharedAnalytics registeredForRemoteNotificationsWithDeviceToken:deviceToken];
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"register token success"];
+    } else {
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Token is required."];
     }
+
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
 - (void)identify:(CDVInvokedUrlCommand*)command {

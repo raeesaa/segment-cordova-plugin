@@ -197,7 +197,7 @@ public class SegmentCordovaPlugin extends CordovaPlugin {
                 Analytics.with(cordova.getActivity().getApplicationContext()).getAnalyticsContext().putDeviceToken(token);
                 callbackContext.success("register token success");
             } else {
-                callbackContext.success("register token failed - token is null");
+                callbackContext.error("register token failed - token is required");
             }
         } catch (Exception ex) {
             Log.getStackTraceString(ex);
