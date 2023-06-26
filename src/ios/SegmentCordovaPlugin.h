@@ -8,6 +8,7 @@
 }
 
 - (void) startWithConfiguration:(CDVInvokedUrlCommand*)command;
+- (void) registeredForRemoteNotifications:(CDVInvokedUrlCommand*)command;
 - (void) identify: (CDVInvokedUrlCommand*)command;
 - (void) track: (CDVInvokedUrlCommand*)command;
 - (void) screen: (CDVInvokedUrlCommand*)command;

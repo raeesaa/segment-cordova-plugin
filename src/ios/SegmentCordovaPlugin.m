@@ -7,6 +7,21 @@
 - (void) pluginInitialize {
 }
 
+- (NSData *)dataFromHexString:(NSString *)string
+{
+    NSMutableData *stringData = [[NSMutableData alloc] init];
+    unsigned char whole_byte;
+    char byte_chars[3] = {'\0','\0','\0'};
+    int i;
+    for (i=0; i < [string length] / 2; i++) {
+        byte_chars[0] = [string characterAtIndex:i*2];
+        byte_chars[1] = [string characterAtIndex:i*2+1];
+        whole_byte = strtol(byte_chars, NULL, 16);
+        [stringData appendBytes:&whole_byte length:1];
+    }
+    return stringData;
+}
+
 - (void)startWithConfiguration:(CDVInvokedUrlCommand*)command {
     CDVPluginResult* pluginResult = nil;
     SEGAnalyticsConfiguration *configuration = nil;
@@ -133,6 +148,23 @@
     }
 
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
+
+- (void) registeredForRemoteNotifications:(CDVInvokedUrlCommand*)command {
+    NSString* token = nil;
+    NSData* deviceToken = nil;
+
+    if ([command.arguments count] > 0) {
+        token = [command.arguments objectAtIndex:0];
+    }
+
+    if (token != nil) {
+        deviceToken = [self dataFromHexString:token];
+    }
+
+    if (deviceToken != nil) {
+        [SEGAnalytics.sharedAnalytics registeredForRemoteNotificationsWithDeviceToken:deviceToken];
+    }
 }
 
 - (void)identify:(CDVInvokedUrlCommand*)command {
