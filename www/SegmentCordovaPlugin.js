@@ -6,7 +6,7 @@ SegmentCordovaPlugin.prototype.startWithConfiguration = function(id, inputs, suc
   cordova.exec(success, error, 'SegmentCordovaPlugin', 'startWithConfiguration', [id, inputs]);
 };
 
-SegmentCordovaPlugin.prototype.registeredForRemoteNotifications = function (id, inputs, success, error) {
+SegmentCordovaPlugin.prototype.registeredForRemoteNotifications = function (inputs, success, error) {
     cordova.exec(success, error, 'SegmentCordovaPlugin', 'registeredForRemoteNotifications', [inputs]);
 };
 
