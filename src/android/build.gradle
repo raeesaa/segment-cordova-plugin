@@ -1,3 +1,10 @@
 repositories{
-  maven { url 'https://appboy.github.io/appboy-android-sdk/sdk' }
+  google()
+  mavenCentral()
+  maven {
+    url 'https://appboy.github.io/appboy-android-sdk/sdk'
+     content {
+      includeGroup "com.appboy"
+    }
+  }
 }
